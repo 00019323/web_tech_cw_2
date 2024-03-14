@@ -1,0 +1,48 @@
+extends ../../layouts/layout
+block content
+    h3.mb-4.text-danger DELETE EVENT
+
+    form.d-flex.gap-4.flex-column#eventDeleteForm
+        .form-group.d-none
+            input.form-control(type="text", id="eventId", disabled="true", value=`${event.id}`)
+        .form-group
+            label(for="eventTitle") Event Title
+            input.form-control(type="text", id="eventTitle", placeholder="Enter event title",
+                value=`${event.title}`, disabled="true")
+        .form-group
+            label(for="eventDescription") Event Description
+            textarea.form-control(rows="5", id="eventDescription", placeholder="Enter event description", disabled="true")= event.description
+        .form-group
+            label(for="eventDate") Event Description
+            input.form-control(type="date", id="eventDate", value=`${moment(event.date).format("YYYY-MM-DD")}`, disabled="true")
+        .form-group
+            label(for="eventLocation") Event Description
+            input.form-control(type="text", id="eventLocation", placeholder="Enter event location",
+            value=`${event.location}`, disabled="true")
+        button.btn.btn-danger(type="submit") Delete
+
+
+    script.
+        document.getElementById('eventDeleteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const id = document.getElementById('eventId').value;
+
+                let response = await fetch(`/events/delete/${id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                let data = await response.json();
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert(data.error ? data.error : "Could not delete an event. Please try again.")
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Could not delete an event. Please try again.")
+            }
+        });

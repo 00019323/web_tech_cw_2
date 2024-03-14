@@ -1,0 +1,51 @@
+extends ../../layouts/layout
+
+block content
+    .alert.alert-success(role="alert") You're editing your profile
+
+    form.d-flex.gap-4.flex-column#profileUpdateForm
+        .form-group
+            label(for="username") Username
+            input.form-control(type="text", id="username", placeholder="Enter username",
+                value=`${user.username}`, required="true")
+        .form-group
+            label(for="fullname") Full Name
+            input.form-control(type="text", id="fullname", placeholder="Enter full name",
+                value=`${user.fullname}`, required="true")
+        .form-group
+            label(for="email") Email
+            input.form-control(type="email", id="email", placeholder="Enter email",
+                value=`${user.email}`, required="true")
+
+        button.btn.btn-success(type="submit") Save
+    script.
+        document.getElementById('profileUpdateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // const userId =
+            !{JSON.stringify(user.id)};
+            try {
+                const username = document.getElementById('username').value;
+                const fullname = document.getElementById('fullname').value;
+                const email = document.getElementById('email').value;
+
+                let response = await fetch(`/profile/edit/`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username, fullname, email
+                    })
+                });
+
+                let data = await response.json();
+                if (response.ok) {
+                    window.location.href = '/profile/view/';
+                } else {
+                    alert(data.error ? data.error : "Could not update profile. Please try again.")
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Could not update profile. Please try again.")
+            }
+        });

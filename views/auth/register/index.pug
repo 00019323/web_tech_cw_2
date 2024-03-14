@@ -1,0 +1,62 @@
+extends ../../../layouts/AuthLayout
+
+block content
+    form.sign-in-form.min-vh-100.d-flex.flex-column.justify-content-center.align-items-center#registerForm
+        style.
+            .sign-in-form {
+                width: 100%;
+                max-width: 330px;
+                padding: 15px;
+                margin: auto;
+            }
+
+        img.mb-4(src="https://pic.onlinewebfonts.com/thumbnails/icons_337531.svg", alt="", width="72", height="77")
+        h1.h3.mb-4.fw-normal Please sign in
+        .form-floating.mb-3
+            input#username.form-control(type="text", placeholder="Username")
+            label(for="username") Username
+        .form-floating.mb-3
+            input#fullname.form-control(type="text", placeholder="Full name")
+            label(for="fullname") Full name
+        .form-floating.mb-3
+            input#email.form-control(type="email", placeholder="name@example.com")
+            label(for="email") Email address
+        .form-floating.mb-4
+            input#password.form-control(type="password", placeholder="Password")
+            label(for="password") Password
+
+        div
+            button.btn.btn-lg.btn-success.me-3(type="submit") Register
+            a(href="/auth/login/")
+                button.btn.btn-lg.btn-outline-primary(type="button") Sign In
+        p.mt-5.mb-3.text-muted Events Planning Application
+
+    script.
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            try {
+                const username = document.getElementById('username').value;
+                const fullname = document.getElementById('fullname').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                let response = await fetch('/auth/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({username, fullname, email, password})
+                });
+
+                let data = await response.json();
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert(data.error ? data.error : "Could not log in. Please try again.")
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Could not log in. Please try again.")
+            }
+        });

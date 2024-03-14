@@ -1,0 +1,51 @@
+extends ../../layouts/layout
+block content
+    h3.mb-4.text-primary CREATE EVENT
+    form.d-flex.gap-4.flex-column#eventCreateForm
+        .form-group
+            label(for="eventTitle") Event Title
+            input.form-control(type="text", id="eventTitle", placeholder="Enter event title", required="true")
+        .form-group
+            label(for="eventDescription") Event Description
+            textarea.form-control(rows="5", id="eventDescription", placeholder="Enter event description", required="true")
+        .form-group
+            label(for="eventDate") Event Description
+            input.form-control(type="date", id="eventDate", required="true")
+        .form-group
+            label(for="eventLocation") Event Description
+            input.form-control(type="text", id="eventLocation", placeholder="Enter event location", required="true")
+        button.btn.btn-primary(type="submit") Submit
+
+
+    script.
+        document.getElementById('eventCreateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = !{JSON.stringify(user.id)};
+            try {
+                const title = document.getElementById('eventTitle').value;
+                const description = document.getElementById('eventDescription').value;
+                const date = document.getElementById('eventDate').value;
+                const location = document.getElementById('eventLocation').value;
+
+                let response = await fetch('/events/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title, description, date, location, userId
+                    })
+                });
+
+                let data = await response.json();
+                if (response.ok) {
+                    console.log(response)
+                    window.location.href = '/';
+                } else {
+                    alert(data.error ? data.error : "Could not create an event. Please try again.")
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Could not create an event. Please try again.")
+            }
+        });

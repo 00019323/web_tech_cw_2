@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="sdkName" value="Python 3.10 (kv365)" />
+  </component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="28878a88-8578-40a8-9f5f-d6c269460eb2" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (kv365)" project-jdk-type="Python SDK" />
+</project>

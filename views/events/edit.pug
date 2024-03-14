@@ -1,0 +1,57 @@
+extends ../../layouts/layout
+block content
+    h3.mb-4.text-success EDIT EVENT
+
+    form.d-flex.gap-4.flex-column#eventUpdateForm
+        .form-group.d-none
+            input.form-control(type="text", id="eventId", disabled="true", value=`${event.id}`)
+        .form-group
+            label(for="eventTitle") Event Title
+            input.form-control(type="text", id="eventTitle", placeholder="Enter event title",
+                value=`${event.title}`, required="true")
+        .form-group
+            label(for="eventDescription") Event Description
+            textarea.form-control(rows="5", id="eventDescription", placeholder="Enter event description", required="true")= event.description
+        .form-group
+            label(for="eventDate") Event Description
+            input.form-control(type="date", id="eventDate", value=`${moment(event.date).format("YYYY-MM-DD")}`, required="true")
+        .form-group
+            label(for="eventLocation") Event Description
+            input.form-control(type="text", id="eventLocation", placeholder="Enter event location",
+                value=`${event.location}`, required="true")
+        button.btn.btn-success(type="submit") Save
+
+
+    script.
+        document.getElementById('eventUpdateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = !{JSON.stringify(user.id)};
+            try {
+                const id = document.getElementById('eventId').value;
+                const title = document.getElementById('eventTitle').value;
+                const description = document.getElementById('eventDescription').value;
+                const date = document.getElementById('eventDate').value;
+                const location = document.getElementById('eventLocation').value;
+
+                let response = await fetch(`/events/edit/${id}/`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title, description, date, location, userId
+                    })
+                });
+
+                let data = await response.json();
+                if (response.ok) {
+                    console.log(response)
+                    window.location.href = '/';
+                } else {
+                    alert(data.error ? data.error : "Could not update an event. Please try again.")
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Could not update an event. Please try again.")
+            }
+        });

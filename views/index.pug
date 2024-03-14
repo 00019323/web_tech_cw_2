@@ -1,0 +1,33 @@
+extends ../layouts/layout
+
+block content
+    div.table-responsive
+        table.table.table-striped
+            thead
+                tr.align-middle
+                    th(scope='col') #
+                    th(scope='col') Title
+                    th(scope='col') Description
+                    th(scope='col') Date
+                    th(scope='col') Location
+                    th(scope='col') Date created
+                    th(scope='col') User
+                    th(scope='col') Actions
+            tbody
+                each event in events
+                    tr.align-middle
+                        td= event.id
+                        td= event.title
+                        td= event.description
+                        td= moment(event.date).format('MMMM DD, YYYY')
+                        td= event.location
+                        td= moment(event.createdAt).format('MMMM DD, YYYY')
+                        td= event.user ? event.user.fullname : 'N/A'
+                        td
+                            div.d-flex.gap-3
+                                a(href=`/events/edit/${event.id}/`)
+                                    button.btn.btn-outline-success.btn-sm Edit
+                                a(href=`/events/delete/${event.id}/`)
+                                    button.btn.btn-outline-danger.btn-sm Delete
+
+
